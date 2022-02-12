@@ -14,28 +14,37 @@ function RequireAuth({ children }) {
 }
 
 function App() {
-  // const [socket, setSocket] = useState(null);
-  // const [textMessage, setTextMessage] = useState("");
-  // const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [textMessage, setTextMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  var string = "";
+
+  useEffect(() => {
+    if (socket === null) {
+      setSocket(io("http://localhost:4000"));
+    }
+  }, []);
+
+  if (socket) {
+    socket.on("message", (text) => {
+      string += text;
+      console.log(string);
+
+      setMessages(messages.concat(text));
+    });
+  }
 
   // useEffect(() => {
-  //   if (socket === null) {
-  //     setSocket(io("http://localhost:4000"));
-  //   }
-  //   if (socket) {
-  //     socket.on("message", (text) => {
-  //       setMessages(messages.concat(text));
-  //     });
-  //   }
-  // });
+  //   console.log(messages);
+  // }, [messages]);
 
-  // const handleClick = (e) => {
-  //   socket.emit("message", textMessage);
-  // };
+  const handleClick = (e) => {
+    socket.emit("message", textMessage);
+  };
 
   return (
     <>
-      {/* <div className="App">
+      <div className="App">
         Hello world
         <ul>
           {messages.map((message) => (
@@ -48,7 +57,7 @@ function App() {
           onChange={(e) => setTextMessage(e.target.value)}
         />
         <button onClick={handleClick}>Send</button>
-      </div> */}
+      </div>
       <Routes>
         <Route
           exact

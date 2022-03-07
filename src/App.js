@@ -4,6 +4,7 @@ import { useEffect, useState, React } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import LogIn from "./components/LogIn";
+import Profile from "./components/Profile";
 
 const checkLogin = () => {
   return !!localStorage.getItem("access_token");
@@ -69,6 +70,15 @@ function App() {
           }
         />
         <Route exact path="/login" element={<LogIn />} />
+        <Route
+          exact
+          path="/profile/:id"
+          element={
+            <RequireAuth>
+              <Profile />
+            </RequireAuth>
+          }
+        />
       </Routes>
     </>
   );

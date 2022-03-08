@@ -5,6 +5,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import LogIn from "./components/LogIn";
 import Profile from "./components/Profile";
+import Room from "./components/Room";
 
 const checkLogin = () => {
   return !!localStorage.getItem("access_token");
@@ -46,7 +47,7 @@ function App() {
   return (
     <>
       <div className="App">
-        Hello world
+        {/* Hello world
         <ul>
           {messages.map((message) => (
             <li>{message}</li>
@@ -57,7 +58,7 @@ function App() {
           value={textMessage}
           onChange={(e) => setTextMessage(e.target.value)}
         />
-        <button onClick={handleClick}>Send</button>
+        <button onClick={handleClick}>Send</button> */}
       </div>
       <Routes>
         <Route
@@ -70,6 +71,7 @@ function App() {
           }
         />
         <Route exact path="/login" element={<LogIn />} />
+        <Route exact path="/room/:id" element={<Room />} />
         <Route
           exact
           path="/profile/:id"

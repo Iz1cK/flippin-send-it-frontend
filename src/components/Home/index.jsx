@@ -18,16 +18,21 @@ export default function Home(props) {
     });
   }, []);
 
-  useEffect(() => {
-    console.log(friends);
-  }, [friends]);
+  const handleFriendClick = (e) => {
+    window.location.href = "http://localhost:3000/profile/" + e.target.value;
+  };
+
   return (
     <>
       <div>Friends:</div>
       <ul>
         {friends
-          ? friends.map((friend) => (
-              <li>
+          ? friends.map((friend, index) => (
+              <li
+                onClick={handleFriendClick}
+                key={index}
+                value={friend.userid_2}
+              >
                 {friend.firstname} {friend.lastname}
               </li>
             ))

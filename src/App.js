@@ -5,6 +5,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import LogIn from "./components/LogIn";
 import axios from "axios";
+import Profile from "./components/Profile";
+import Room from "./components/Room";
 
 const checkLogin = () => {
   return !!localStorage.getItem("access_token");
@@ -77,6 +79,16 @@ function App() {
           }
         />
         <Route exact path="/login" element={<LogIn />} />
+        <Route exact path="/room/:id" element={<Room />} />
+        <Route
+          exact
+          path="/profile/:id"
+          element={
+            <RequireAuth>
+              <Profile />
+            </RequireAuth>
+          }
+        />
       </Routes>
     </>
   );

@@ -9,33 +9,35 @@ export default function Room(props) {
   const [userData, setUserData] = useState({});
   const [otherData, setOtherData] = useState({});
 
-  useEffect(async () => {
+  useEffect(() => {
     let axiosConfig = {
       headers: {
         "Content-Type": "application/json",
         authorization: "Bearer " + localStorage.getItem("access_token"),
       },
     };
-    setMessages(
-      (
-        await axios.post(
-          `${API_URL}/user/room/allMessages`,
-          {
-            otherId: window.location.pathname.split("/")[2],
-          },
-          axiosConfig
-        )
-      ).data.messages
-    );
-    setUserData((await axios.get(`${API_URL}/user`, axiosConfig)).data);
-    setOtherData(
-      (
-        await axios.get(
-          `${API_URL}/user/${window.location.pathname.split("/")[2]}`,
-          axiosConfig
-        )
-      ).data
-    );
+    async function updateData() {
+      setMessages(
+        (
+          await axios.post(
+            `${API_URL}/user/room/allMessages`,
+            {
+              otherId: window.location.pathname.split("/")[2],
+            },
+            axiosConfig
+          )
+        ).data.messages
+      );
+      setUserData((await axios.get(`${API_URL}/user`, axiosConfig)).data);
+      setOtherData(
+        (
+          await axios.get(
+            `${API_URL}/user/${window.location.pathname.split("/")[2]}`,
+            axiosConfig
+          )
+        ).data
+      );
+    }
   }, []);
 
   return (
@@ -48,12 +50,12 @@ export default function Room(props) {
                 <li
                   key={index}
                   className={
-                    message.userid == userData.userid
+                    message.userid === userData.userid
                       ? style.rightText
                       : style.leftText
                   }
                 >
-                  {message.userid == userData.userid ? (
+                  {message.userid === userData.userid ? (
                     <div className={style.messageBox}>
                       <span className={style.msgFrom}>
                         {userData.firstname} {userData.lastname}:

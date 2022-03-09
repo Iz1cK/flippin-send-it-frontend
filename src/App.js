@@ -4,6 +4,7 @@ import { useEffect, useState, React } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./components/Home";
 import LogIn from "./components/LogIn";
+import axios from "axios";
 
 const checkLogin = () => {
   return !!localStorage.getItem("access_token");
@@ -17,7 +18,6 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [textMessage, setTextMessage] = useState("");
   const [messages, setMessages] = useState([]);
-  var string = "";
 
   useEffect(() => {
     if (socket === null) {
@@ -27,9 +27,6 @@ function App() {
 
   if (socket) {
     socket.on("message", (text) => {
-      string += text;
-      console.log(string);
-
       setMessages(messages.concat(text));
     });
   }
@@ -42,9 +39,19 @@ function App() {
     socket.emit("message", textMessage);
   };
 
+  const verifyUser = (e) => {
+    const userid = window.location.search.split("=")[1];
+    console.log(userid);
+    axios
+      .get(`http://localhost:4000/api/user/account/verify/${userid}`)
+      .then((response) => {
+        console.log(response);
+      });
+  };
+
   return (
     <>
-      <div className="App">
+      {/* <div className="App">
         Hello world
         <ul>
           {messages.map((message) => (
@@ -57,7 +64,8 @@ function App() {
           onChange={(e) => setTextMessage(e.target.value)}
         />
         <button onClick={handleClick}>Send</button>
-      </div>
+      <button onClick={verifyUser}>Verify</button>
+      </div> */}
       <Routes>
         <Route
           exact

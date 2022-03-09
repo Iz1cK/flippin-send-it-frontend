@@ -95,10 +95,6 @@ export default function Authentication() {
       });
   }
 
-  const onGenderChange = (value) => {
-    setGender(value);
-  };
-
   function registerAccount(e) {
     if (e && e.type !== "click" && e.key !== "Enter") return;
     if (!registerActive) return setRegisterActive(true);
@@ -109,15 +105,17 @@ export default function Authentication() {
       setConfirm("");
       return setError(accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR);
     }
-    Authenticator.register({
+    const user = {
       username: username,
       password: password,
       firstname: firstname,
       lastname: lastname,
       email: email,
       gender: gender,
-      birthdate: birthDate,
-    }).then((response) => {
+      age: birthDate,
+    };
+    console.log(user);
+    Authenticator.register(user).then((response) => {
       setError(accountErrors.ACCOUNT_CREATED);
       setRegisterActive(false);
     });
@@ -217,6 +215,22 @@ export default function Authentication() {
                 onFocus={(e) => (e.target.value = "")}
                 onKeyPress={keyPressChooser(registerActive)}
               />
+              <input
+                type="date"
+                onChange={(e) => setBirthDate(e.target.value)}
+              ></input>
+              <select
+                id="cars"
+                name="cars"
+                className={styles.inputStyle}
+                onChange={(e) => setGender(e.target.value)}
+                onFocus={(e) => (e.target.value = "")}
+                onKeyPress={keyPressChooser(registerActive)}
+              >
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
           </>
         ) : (

@@ -99,6 +99,25 @@ input {
   color: var(--font-color-inner);
 }
 
+.inputStyle {
+  margin-right: 15px;
+  margin-bottom: 15px;
+  padding: 10px 10px;
+
+  background-color: var(--auth-button-background-color);
+  border-radius: 15px;
+  border: 2px solid var(--button-border-color);
+
+  font-size: medium;
+
+  outline-style: none;
+  color: var(--font-color-inner);
+}
+
+.inputStyle:hover {
+  background-color: var(--auth-button-background-hover-color);
+}
+
 .loginContainer input:not(label):hover {
   background-color: var(--auth-button-background-hover-color);
 }

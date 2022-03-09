@@ -4,7 +4,7 @@ const isAccountLogin = () => !!localStorage.getItem("access_token");
 const login = (account) =>
   axios.post("http://localhost:4000/api/user/login", account);
 const register = (account) =>
-  axios.post("http://localhost:4000/api/user/register", account);
+  axios.post("http://localhost:4000/api/user/create", account);
 
 export default {
   isAccountLogin,

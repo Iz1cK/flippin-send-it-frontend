@@ -79,7 +79,7 @@ function App() {
           }
         />
         <Route exact path="/login" element={<LogIn />} />
-        <Route exact path="/room/:id" element={<Room />} />
+        <Route exact path="/room/:roomId" element={<Room />} />
         <Route
           exact
           path="/profile/:id"

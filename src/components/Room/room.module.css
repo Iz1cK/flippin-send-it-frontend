@@ -37,6 +37,9 @@
   margin: auto;
   width: 75vw;
   background-color: #17171b;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 75vh;
 }
 
 .msgFrom {

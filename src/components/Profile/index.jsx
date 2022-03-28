@@ -23,7 +23,12 @@ export default function Profile(props) {
   return (
     <>
       <div>
-        <img src="http://localhost:4000/api/images/c3a6e98c93546a983d21fcc620edb088"></img>
+        <img
+          crossOrigin="*"
+          src="http://localhost:4000/api/images/c3a6e98c93546a983d21fcc620edb088"
+          width="250px"
+          height="250px"
+        ></img>
         <h1>Username: {userData.username}</h1>
         <h1>Email: {userData.email}</h1>
         <h1>

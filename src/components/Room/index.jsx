@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import style from "./room.module.css";
 import Avatar from "@mui/material/Avatar";
-import { deepOrange, deepPurple } from "@mui/material/colors";
 import { Box } from "@mui/material";
 import { io } from "socket.io-client";
 import { useParams } from "react-router";
@@ -82,10 +81,9 @@ export default function Room(props) {
 
   useEffect(() => {
     if (messages.length != 0 && participants.length != 0) {
-      console.log(bottomOfChat.current);
-      if (bottomOfChat.current) {
+      setTimeout(() => {
         bottomOfChat.current.scrollIntoView();
-      }
+      }, 0);
       setLoading(false);
       if (participants.length > 2) {
         axios
@@ -103,11 +101,6 @@ export default function Room(props) {
       }
     }
   }, [messages, participants]);
-
-  useEffect(() => {
-    console.log(bottomOfChat.current);
-  }, [bottomOfChat]);
-
   const sendMessageHandler = (e) => {
     const newMessage = {
       message: message,

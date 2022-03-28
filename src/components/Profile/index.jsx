@@ -16,9 +16,14 @@ export default function Profile(props) {
     );
   }, []);
 
+  useEffect(() => {
+    console.log(userData);
+  }, [userData]);
+
   return (
     <>
       <div>
+        <img src="http://localhost:4000/api/images/c3a6e98c93546a983d21fcc620edb088"></img>
         <h1>Username: {userData.username}</h1>
         <h1>Email: {userData.email}</h1>
         <h1>

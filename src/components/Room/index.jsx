@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import style from "./room.module.css";
+import Avatar from "@mui/material/Avatar";
+import { deepOrange, deepPurple } from "@mui/material/colors";
+import { Box } from "@mui/material";
 import { io } from "socket.io-client";
 import { useParams } from "react-router";
+// import UseStyles from "../useStyles";
 
 const API_URL = `http://localhost:4000/api`;
 
@@ -13,27 +17,54 @@ const axiosConfig = {
   },
 };
 
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = "#";
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
 export default function Room(props) {
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [participants, setParticipants] = useState({});
+  const [participants, setParticipants] = useState([]);
   const [message, setMessage] = useState("");
-  const { roomId } = useParams();
   const [currId, setCurrId] = useState(-1);
   const [loading, setLoading] = useState(true);
+  const [roomName, setRoomName] = useState("");
+  const { roomId } = useParams();
+  const bottomOfChat = useRef();
 
-  useEffect(() => {
+  // const classes = UseStyles();
+
+  useEffect(async () => {
     setLoading(true);
     if (socket === null) {
       setSocket(io("http://localhost:4000"));
     }
     async function updateData() {
-      axios
-        .post(`${API_URL}/room/all-participants`, { roomId }, axiosConfig)
-        .then((response) => {
-          setParticipants(response.data.result);
-          setCurrId(response.data.userId);
-        });
+      const allParticipants = (
+        await axios.post(
+          `${API_URL}/room/all-participants`,
+          { roomId },
+          axiosConfig
+        )
+      ).data;
+      setParticipants(allParticipants.result);
+      setCurrId(allParticipants.userId);
       setMessages(
         (
           await axios.post(
@@ -46,17 +77,38 @@ export default function Room(props) {
         ).data.messages
       );
     }
-    updateData();
+    await updateData();
   }, []);
 
   useEffect(() => {
-    if (messages.length != 0 && participants.length != 0) setLoading(false);
-    console.log(messages);
-    console.log(participants);
+    if (messages.length != 0 && participants.length != 0) {
+      console.log(bottomOfChat.current);
+      if (bottomOfChat.current) {
+        bottomOfChat.current.scrollIntoView();
+      }
+      setLoading(false);
+      if (participants.length > 2) {
+        axios
+          .post(`${API_URL}/room`, { roomId: roomId }, axiosConfig)
+          .then(({ data }) => {
+            setRoomName(data.result.name);
+          });
+      } else {
+        const filteredParticipants = participants.filter(
+          (participant) => participant.userid !== currId
+        );
+        setRoomName(
+          `${filteredParticipants[0].firstname} ${filteredParticipants[0].lastname}`
+        );
+      }
+    }
   }, [messages, participants]);
 
+  useEffect(() => {
+    console.log(bottomOfChat.current);
+  }, [bottomOfChat]);
+
   const sendMessageHandler = (e) => {
-    console.log(message);
     const newMessage = {
       message: message,
       roomId: +roomId,
@@ -64,21 +116,17 @@ export default function Room(props) {
     };
     axios
       .post(`http://localhost:4000/api/room/send`, newMessage, axiosConfig)
-      .then((response) => {
-        console.log(response);
+      .then(({ data }) => {
+        if (data.status) setMessages(messages.concat(newMessage));
       });
-    setMessages(messages.concat(newMessage));
-    window.scrollBy(0, 100);
-    console.log(newMessage);
-    console.log(messages);
   };
 
   if (loading) return <>Loading...</>;
   return (
-    <>
-      <h1 className={style.centerText}>Messages:</h1>
+    <div style={{ overflowY: "hidden", marginTop: "10px" }}>
       <div className={style.flexBox}>
-        <div className={style.chatWindow}>
+        <div className={style.roomName}>{`${roomName}`}</div>
+        <div className={`${style.chatWindow}`}>
           <ul className={style.noBullets}>
             {messages.map((message, index) => {
               for (let i = 0; i < participants.length; i++) {
@@ -92,19 +140,32 @@ export default function Room(props) {
                           : style.leftText
                       }
                     >
-                      <div className={style.messageBox}>
-                        <span className={style.msgFrom}>
-                          {participants[i].firstname} {participants[i].lastname}
-                          :
-                        </span>
+                      <Box className={`${style.messageBox}`}>
+                        <div className={style.imageAndName}>
+                          <Avatar
+                            sx={{
+                              bgcolor: stringToColor(
+                                `${participants[i].firstname[0]} ${participants[i].lastname[0]}`
+                              ),
+                            }}
+                          >
+                            {participants[i].firstname[0]}
+                            {participants[i].lastname[0]}
+                          </Avatar>
+                          <span className={style.msgFrom}>
+                            {participants[i].firstname}{" "}
+                            {participants[i].lastname}:
+                          </span>
+                        </div>
                         <span className={style.msgMessage}>
                           {message.message}
                         </span>
-                      </div>
+                      </Box>
                     </li>
                   );
               }
             })}
+            <li ref={bottomOfChat}></li>
           </ul>
         </div>
         <div className={style.chatBox}>
@@ -118,6 +179,6 @@ export default function Room(props) {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

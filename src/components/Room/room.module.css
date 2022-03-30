@@ -11,6 +11,26 @@
   text-align: center;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 .leftText {
   position: relative;
   width: 50vw;
@@ -44,10 +64,23 @@
 
 .msgFrom {
   font-size: 15px;
+  margin-left: 5px;
 }
 
 .msgMessage {
   font-size: 25px;
+}
+
+.roomName {
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  width: 75vw;
+  height: 5vh;
+  background-color: #3b3b47;
+  z-index: 2;
 }
 
 .messageBox {
@@ -76,4 +109,14 @@
 
 .sendButton:hover {
   background-color: #0579ff;
+}
+
+.imageAndName {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.chatInput {
+  width: 50vw;
 }

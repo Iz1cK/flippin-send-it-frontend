@@ -7,6 +7,7 @@ import LogIn from "./components/LogIn";
 import axios from "axios";
 import Profile from "./components/Profile";
 import Room from "./components/Room";
+import Header from "./components/Header";
 
 const checkLogin = () => {
   return !!localStorage.getItem("access_token");
@@ -68,6 +69,7 @@ function App() {
         <button onClick={handleClick}>Send</button>
       <button onClick={verifyUser}>Verify</button>
       </div> */}
+      <Header />
       <Routes>
         <Route
           exact

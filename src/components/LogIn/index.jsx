@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import styles from "./login.module.css";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-dropdown";
+import axios from "axios";
 import "react-dropdown/style.css";
 import Authenticator from "../../utils/Authenticator";
+
+const API_URL = `http://localhost:4000/api`;
 
 //Configurations
 const TYPING_ANIMATION_SPEED = 25;
@@ -35,6 +38,7 @@ export default function Authentication() {
   const [lastname, setLastName] = useState("");
   const [birthDate, setBirthDate] = useState(null);
   const [gender, setGender] = useState("");
+  const [picture, setPicture] = useState(null);
   const [registerActive, setRegisterActive] = useState(false);
   const [error, setError] = useState("");
   const [typedError, setTypedError] = useState("");
@@ -95,7 +99,7 @@ export default function Authentication() {
       });
   }
 
-  function registerAccount(e) {
+  async function registerAccount(e) {
     if (e && e.type !== "click" && e.key !== "Enter") return;
     if (!registerActive) return setRegisterActive(true);
     if (!username) return setError(accountErrors.USERNAME_MISSING);
@@ -105,20 +109,29 @@ export default function Authentication() {
       setConfirm("");
       return setError(accountErrors.WRONG_CONFIRMATION_PASSWORD_ERROR);
     }
-    const user = {
-      username: username,
-      password: password,
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
-      gender: gender,
-      age: birthDate,
-    };
-    console.log(user);
-    Authenticator.register(user).then((response) => {
-      setError(accountErrors.ACCOUNT_CREATED);
-      setRegisterActive(false);
-    });
+    let form_data = new FormData();
+    form_data.append("image", picture);
+
+    axios
+      .post(`${API_URL}/images`, form_data, {
+        headers: { "Content-Type": `multipart/form-data` },
+      })
+      .then(({ data }) => {
+        const user = {
+          username: username,
+          password: password,
+          firstname: firstname,
+          lastname: lastname,
+          email: email,
+          gender: gender,
+          age: birthDate,
+          image: data.key,
+        };
+        Authenticator.register(user).then((response) => {
+          setError(accountErrors.ACCOUNT_CREATED);
+          setRegisterActive(false);
+        });
+      });
   }
 
   // Chooses whether register account should activate or login account on enter key press.
@@ -231,6 +244,14 @@ export default function Authentication() {
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
               </select>
+              <input
+                accept="image/*"
+                type="file"
+                singleupload
+                onChange={(e) => {
+                  setPicture(e.target.files[0]);
+                }}
+              ></input>
             </div>
           </>
         ) : (

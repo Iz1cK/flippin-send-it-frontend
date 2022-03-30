@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import styles from "./home.module.css";
 
 let API_URL = `http://localhost:4000/api`;
 
@@ -25,19 +26,34 @@ export default function Home(props) {
   return (
     <>
       <div>Friends:</div>
-      <ul>
+      <div className={styles.cardsBox}>
         {friends
           ? friends.map((friend, index) => (
-              <li
+              <div
                 onClick={handleFriendClick}
                 key={index}
                 value={friend.userid_2}
+                className={styles.card}
               >
-                {friend.firstname} {friend.lastname}
-              </li>
+                <img
+                  width={"250px"}
+                  height={"250px"}
+                  src={`https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg`}
+                ></img>
+                <div className={styles.infoBox}>
+                  <h2>
+                    {friend.firstname} {friend.lastname}
+                  </h2>
+                  <p>
+                    Age: {friend.age}
+                    <br></br>
+                    E-mail:{friend.email}
+                  </p>
+                </div>
+              </div>
             ))
           : null}
-      </ul>
+      </div>
     </>
   );
 }

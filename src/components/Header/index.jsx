@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./header.module.css";
 import logo from "../../assets/Images/flippinsenditmain.PNG";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const API_URL = `http://localhost:4000/api`;
 
@@ -15,10 +15,15 @@ const axiosConfig = {
 
 export default function Header() {
   const [currId, setCurrId] = useState(-1);
-
+  const navigate = useNavigate();
   useEffect(async () => {
     setCurrId((await axios.get(`${API_URL}/user`, axiosConfig)).data.userid);
   }, []);
+
+  const handleLogout = (e) => {
+    window.localStorage.removeItem("access_token");
+    navigate("/login");
+  };
 
   return (
     <header className={styles.header}>
@@ -46,7 +51,7 @@ export default function Header() {
           <Link to="/about">About us</Link>
         </div>
 
-        <div>Log Out</div>
+        <div onClick={handleLogout}>Log Out</div>
       </div>
     </header>
   );

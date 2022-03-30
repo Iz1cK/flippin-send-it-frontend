@@ -112,26 +112,25 @@ export default function Authentication() {
     let form_data = new FormData();
     form_data.append("image", picture);
 
-    axios
-      .post(`${API_URL}/images`, form_data, {
-        headers: { "Content-Type": `multipart/form-data` },
-      })
-      .then(({ data }) => {
-        const user = {
-          username: username,
-          password: password,
-          firstname: firstname,
-          lastname: lastname,
-          email: email,
-          gender: gender,
-          age: birthDate,
-          image: data.key,
-        };
-        Authenticator.register(user).then((response) => {
-          setError(accountErrors.ACCOUNT_CREATED);
-          setRegisterActive(false);
-        });
-      });
+    // axios
+    //   .post(`${API_URL}/images`, form_data, {
+    //     headers: { "Content-Type": `multipart/form-data` },
+    //   })
+    //   .then(({ data }) => {});
+    const user = {
+      username: username,
+      password: password,
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      gender: gender,
+      age: birthDate,
+      // image: data.key,
+    };
+    Authenticator.register(user).then((response) => {
+      setError(accountErrors.ACCOUNT_CREATED);
+      setRegisterActive(false);
+    });
   }
 
   // Chooses whether register account should activate or login account on enter key press.
@@ -244,14 +243,14 @@ export default function Authentication() {
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
               </select>
-              <input
+              {/* <input
                 accept="image/*"
                 type="file"
                 singleupload
                 onChange={(e) => {
                   setPicture(e.target.files[0]);
                 }}
-              ></input>
+              ></input> */}
             </div>
           </>
         ) : (

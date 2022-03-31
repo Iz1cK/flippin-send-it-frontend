@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./home.module.css";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 let API_URL = `http://localhost:4000/api`;
 
 export default function Home(props) {
   const [friends, setFriends] = useState([]);
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
     let axiosConfig = {
@@ -19,41 +21,88 @@ export default function Home(props) {
     });
   }, []);
 
-  const handleFriendClick = (e) => {
-    window.location.href = "http://localhost:3000/profile/" + e.target.value;
+  const handleFriendClick = (id) => (e) => {
+    window.location.href = "http://localhost:3000/profile/" + id;
+  };
+
+  const reorder = (list, startIndex, endIndex) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  };
+
+  const onDragEnd = (result) => {
+    const { destination, source, draggableId } = result;
+
+    if (!destination) return;
+
+    const newsItems = reorder(friends, source.index, destination.index);
+
+    setFriends(newsItems);
   };
 
   return (
     <>
       <div>Friends:</div>
-      <div className={styles.cardsBox}>
-        {friends
-          ? friends.map((friend, index) => (
-              <div
-                onClick={handleFriendClick}
-                key={index}
-                value={friend.userid_2}
-                className={styles.card}
-              >
-                <img
-                  width={"250px"}
-                  height={"250px"}
-                  src={`https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg`}
-                ></img>
-                <div className={styles.infoBox}>
-                  <h2>
-                    {friend.firstname} {friend.lastname}
-                  </h2>
-                  <p>
-                    Age: {friend.age}
-                    <br></br>
-                    E-mail:{friend.email}
-                  </p>
-                </div>
-              </div>
-            ))
-          : null}
-      </div>
+      <input onChange={(e) => setFilter(e.target.value)}></input>
+
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="droppable" direction="horizontal">
+          {(provided) => (
+            <ul
+              className={styles.cardsBox}
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
+              {friends
+                .filter(
+                  (friend) =>
+                    friend.firstname
+                      .toLowerCase()
+                      .includes(filter.toLowerCase()) ||
+                    friend.lastname.toLowerCase().includes(filter.toLowerCase())
+                )
+                .map((friend, index) => {
+                  return (
+                    <Draggable
+                      key={friend.email}
+                      draggableId={friend.email}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          onClick={handleFriendClick(friend.userid)}
+                          className={styles.card}
+                        >
+                          <img
+                            width={"250px"}
+                            height={"250px"}
+                            src={`https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg`}
+                          ></img>
+                          <div className={styles.infoBox}>
+                            <h2>
+                              {friend.firstname} {friend.lastname}
+                            </h2>
+                            <p>
+                              Age: {friend.age}
+                              <br></br>
+                              E-mail:{friend.email}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
+            </ul>
+          )}
+        </Droppable>
+      </DragDropContext>
     </>
   );
 }

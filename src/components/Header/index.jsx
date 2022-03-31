@@ -4,7 +4,7 @@ import styles from "./header.module.css";
 import logo from "../../assets/Images/flippinsenditmain.PNG";
 import { Link, useNavigate } from "react-router-dom";
 
-const API_URL = `http://localhost:4000/api`;
+const API_URL = process.env.API_URL;
 
 const axiosConfig = {
   headers: {

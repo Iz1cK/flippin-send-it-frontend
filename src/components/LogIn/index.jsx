@@ -6,7 +6,7 @@ import axios from "axios";
 import "react-dropdown/style.css";
 import Authenticator from "../../utils/Authenticator";
 
-const API_URL = `http://localhost:4000/api`;
+const API_URL = process.env.API_URL;
 
 //Configurations
 const TYPING_ANIMATION_SPEED = 25;
@@ -112,25 +112,26 @@ export default function Authentication() {
     let form_data = new FormData();
     form_data.append("image", picture);
 
-    // axios
-    //   .post(`${API_URL}/images`, form_data, {
-    //     headers: { "Content-Type": `multipart/form-data` },
-    //   })
-    //   .then(({ data }) => {});
-    const user = {
-      username: username,
-      password: password,
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
-      gender: gender,
-      age: birthDate,
-      // image: data.key,
-    };
-    Authenticator.register(user).then((response) => {
-      setError(accountErrors.ACCOUNT_CREATED);
-      setRegisterActive(false);
-    });
+    axios
+      .post(`${API_URL}/images`, form_data, {
+        headers: { "Content-Type": `multipart/form-data` },
+      })
+      .then(({ data }) => {
+        const user = {
+          username: username,
+          password: password,
+          firstname: firstname,
+          lastname: lastname,
+          email: email,
+          gender: gender,
+          age: birthDate,
+          image: data.key,
+        };
+        Authenticator.register(user).then((response) => {
+          setError(accountErrors.ACCOUNT_CREATED);
+          setRegisterActive(false);
+        });
+      });
   }
 
   // Chooses whether register account should activate or login account on enter key press.

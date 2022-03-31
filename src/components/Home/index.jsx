@@ -3,7 +3,7 @@ import axios from "axios";
 import styles from "./home.module.css";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-let API_URL = `http://localhost:4000/api`;
+const API_URL = process.env.API_URL;
 
 export default function Home(props) {
   const [friends, setFriends] = useState([]);

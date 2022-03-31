@@ -15,11 +15,6 @@ export default function Profile(props) {
       ).data
     );
   }, []);
-
-  useEffect(() => {
-    console.log(userData);
-  }, [userData]);
-
   return (
     <>
       <div>

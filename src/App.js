@@ -22,25 +22,25 @@ function App() {
   const [textMessage, setTextMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
-    if (socket === null) {
-      setSocket(io("http://localhost:4000"));
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (socket === null) {
+  //     setSocket(io("http://localhost:4000"));
+  //   }
+  // }, []);
 
-  if (socket) {
-    socket.on("message", (text) => {
-      setMessages(messages.concat(text));
-    });
-  }
+  // if (socket) {
+  //   socket.on("message", (text) => {
+  //     setMessages(messages.concat(text));
+  //   });
+  // }
 
   // useEffect(() => {
   //   console.log(messages);
   // }, [messages]);
 
-  const handleClick = (e) => {
-    socket.emit("message", textMessage);
-  };
+  // const handleClick = (e) => {
+  //   socket.emit("message", textMessage);
+  // };
 
   const verifyUser = (e) => {
     const userid = window.location.search.split("=")[1];

@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./home.module.css";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-
-const API_URL = process.env.API_URL;
+const API_URL = process.env.REACT_APP_API_URL;
 
 export default function Home(props) {
   const [friends, setFriends] = useState([]);
@@ -16,6 +15,7 @@ export default function Home(props) {
         Authorization: "Bearer " + localStorage.getItem("access_token"),
       },
     };
+    console.log(API_URL);
     axios.get(`${API_URL}/user/friends/all`, axiosConfig).then(({ data }) => {
       setFriends(data);
     });

@@ -7,7 +7,10 @@ import { io } from "socket.io-client";
 import { useParams } from "react-router";
 // import UseStyles from "../useStyles";
 
-const API_URL = `http://localhost:4000/api`;
+const API_URL =
+  process.env.REACT_APP_PRODUCTION == "true"
+    ? "http://localhost:4000/api"
+    : process.env.REACT_APP_API_URL;
 
 const axiosConfig = {
   headers: {
@@ -47,8 +50,6 @@ export default function Room(props) {
   const { roomId } = useParams();
   const bottomOfChat = useRef();
 
-  // const classes = UseStyles();
-
   useEffect(async () => {
     setLoading(true);
     if (socket === null) {
@@ -79,6 +80,8 @@ export default function Room(props) {
     await updateData();
   }, []);
 
+  const handleAddFriend = (e) => {};
+
   useEffect(() => {
     if (messages.length != 0 && participants.length != 0) {
       setTimeout(() => {
@@ -108,10 +111,11 @@ export default function Room(props) {
       userid: currId,
     };
     axios
-      .post(`http://localhost:4000/api/room/send`, newMessage, axiosConfig)
+      .post(`${API_URL}/room/send`, newMessage, axiosConfig)
       .then(({ data }) => {
         if (data.status) setMessages(messages.concat(newMessage));
       });
+    setMessage("");
   };
 
   if (loading) return <>Loading...</>;

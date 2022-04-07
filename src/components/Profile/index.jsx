@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+const API_URL =
+  process.env.REACT_APP_PRODUCTION == "true"
+    ? "http://localhost:4000/api"
+    : process.env.REACT_APP_API_URL;
+
 export default function Profile(props) {
   const [userData, setUserData] = useState({});
+  const [currId, setCurrId] = useState({});
 
   useEffect(async () => {
     setUserData(
       (
         await axios.get(
-          `http://localhost:4000/api/user/${
-            window.location.pathname.split("/")[2]
-          }`
+          `${API_URL}/user/${window.location.pathname.split("/")[2]}`
         )
       ).data
     );
+    setCurrId((await axios.get(`${API_URL}/user`)).data);
   }, []);
   return (
     <>
@@ -31,6 +36,9 @@ export default function Profile(props) {
         </h1>
         <h1>Age: {userData.age}</h1>
         <h1>Verified: {userData.verified ? "Yes" : "No"}</h1>
+        {currId.userid !== userData.userid ? (
+          <button onClick={handleAddFriend}></button>
+        ) : null}
       </div>
     </>
   );

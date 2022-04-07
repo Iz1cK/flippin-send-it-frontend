@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./home.module.css";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL =
+  process.env.REACT_APP_PRODUCTION == "true"
+    ? "http://localhost:4000/api"
+    : process.env.REACT_APP_API_URL;
 
 export default function Home(props) {
   const [friends, setFriends] = useState([]);
@@ -15,7 +18,6 @@ export default function Home(props) {
         Authorization: "Bearer " + localStorage.getItem("access_token"),
       },
     };
-    console.log(API_URL);
     axios.get(`${API_URL}/user/friends/all`, axiosConfig).then(({ data }) => {
       setFriends(data);
     });
@@ -35,17 +37,14 @@ export default function Home(props) {
 
   const onDragEnd = (result) => {
     const { destination, source, draggableId } = result;
-
     if (!destination) return;
-
     const newsItems = reorder(friends, source.index, destination.index);
-
     setFriends(newsItems);
   };
 
   return (
     <>
-      <div>Friends:</div>
+      <span>Friends:</span>
       <input onChange={(e) => setFilter(e.target.value)}></input>
 
       <DragDropContext onDragEnd={onDragEnd}>
@@ -54,6 +53,7 @@ export default function Home(props) {
             <ul
               className={styles.cardsBox}
               {...provided.droppableProps}
+              {...provided.placeholder}
               ref={provided.innerRef}
             >
               {friends

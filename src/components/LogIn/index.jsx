@@ -6,7 +6,10 @@ import axios from "axios";
 import "react-dropdown/style.css";
 import Authenticator from "../../utils/Authenticator";
 
-const API_URL = process.env.API_URL;
+const API_URL =
+  process.env.REACT_APP_PRODUCTION == "true"
+    ? "http://localhost:4000/api"
+    : process.env.REACT_APP_API_URL;
 
 //Configurations
 const TYPING_ANIMATION_SPEED = 25;

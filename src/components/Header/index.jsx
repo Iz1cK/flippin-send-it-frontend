@@ -4,7 +4,10 @@ import styles from "./header.module.css";
 import logo from "../../assets/Images/flippinsenditmain.PNG";
 import { Link, useNavigate } from "react-router-dom";
 
-const API_URL = process.env.API_URL;
+const API_URL =
+  process.env.REACT_APP_PRODUCTION == "true"
+    ? "http://localhost:4000/api"
+    : process.env.REACT_APP_API_URL;
 
 const axiosConfig = {
   headers: {
@@ -35,7 +38,7 @@ export default function Header() {
         </div>
 
         <div>
-          <Link to="/home">Friends</Link>
+          <Link to="/add-friend">Add Friends</Link>
         </div>
 
         <div>
@@ -44,6 +47,11 @@ export default function Header() {
 
         <div>
           <Link to={`/profile/${currId}`}>Profile</Link>
+        </div>
+
+        <div>
+          <label>Search:</label>
+          <input type="text"></input>
         </div>
       </div>
       <div className={styles.rightSide}>

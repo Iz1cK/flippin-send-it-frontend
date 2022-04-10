@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const API_URL =
   process.env.REACT_APP_PRODUCTION == "true"
@@ -9,15 +10,12 @@ const API_URL =
 export default function Profile(props) {
   const [userData, setUserData] = useState({});
   const [currId, setCurrId] = useState({});
+  const params = useParams();
+
+  const handleAddFriend = () => {};
 
   useEffect(async () => {
-    setUserData(
-      (
-        await axios.get(
-          `${API_URL}/user/${window.location.pathname.split("/")[2]}`
-        )
-      ).data
-    );
+    setUserData((await axios.get(`${API_URL}/user/${params.id}`)).data);
     setCurrId((await axios.get(`${API_URL}/user`)).data);
   }, []);
   return (
@@ -37,7 +35,7 @@ export default function Profile(props) {
         <h1>Age: {userData.age}</h1>
         <h1>Verified: {userData.verified ? "Yes" : "No"}</h1>
         {currId.userid !== userData.userid ? (
-          <button onClick={handleAddFriend}></button>
+          <button onClick={handleAddFriend}>Add Friend</button>
         ) : null}
       </div>
     </>

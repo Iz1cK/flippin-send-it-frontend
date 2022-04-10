@@ -49,9 +49,9 @@ export default function Header() {
           <Link to={`/profile/${currId}`}>Profile</Link>
         </div>
 
-        <div>
+        <div className={styles.girthyDiv}>
           <label>Search:</label>
-          <input type="text"></input>
+          <input type="text" className={styles.inputStyle}></input>
         </div>
       </div>
       <div className={styles.rightSide}>

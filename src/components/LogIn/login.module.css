@@ -84,7 +84,7 @@ body {
   color: var(--font-color-inner);
 }
 
-input {
+/* input {
   margin-right: 15px;
   margin-bottom: 15px;
   padding: 10px 10px;
@@ -97,7 +97,7 @@ input {
 
   outline-style: none;
   color: var(--font-color-inner);
-}
+} */
 
 .inputStyle {
   margin-right: 15px;

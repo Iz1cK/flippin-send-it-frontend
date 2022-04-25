@@ -7,17 +7,36 @@ const API_URL =
     ? "http://localhost:4000/api"
     : process.env.REACT_APP_API_URL;
 
+const axiosConfig = {
+  headers: {
+    "Content-Type": "application/json",
+    authorization: "Bearer " + localStorage.getItem("access_token"),
+  },
+};
+
 export default function Profile(props) {
+  const { currId } = props;
   const [userData, setUserData] = useState({});
-  const [currId, setCurrId] = useState({});
+  const [friendStatus, setFriendStatus] = useState({});
   const params = useParams();
 
   const handleAddFriend = () => {};
 
   useEffect(async () => {
     setUserData((await axios.get(`${API_URL}/user/${params.id}`)).data);
-    setCurrId((await axios.get(`${API_URL}/user`)).data);
   }, []);
+
+  useEffect(async () => {
+    setFriendStatus(
+      (
+        await axios.post(
+          `${API_URL}/user/friends/check`,
+          { otherid: userData.userid },
+          axiosConfig
+        )
+      ).data.result
+    );
+  }, [userData]);
   return (
     <>
       <div>
@@ -35,7 +54,11 @@ export default function Profile(props) {
         <h1>Age: {userData.age}</h1>
         <h1>Verified: {userData.verified ? "Yes" : "No"}</h1>
         {currId.userid !== userData.userid ? (
-          <button onClick={handleAddFriend}>Add Friend</button>
+          friendStatus ? (
+            <button onClick={handleAddFriend}>Remove Friend</button>
+          ) : (
+            <button onClick={handleAddFriend}>Add Friend</button>
+          )
         ) : null}
       </div>
     </>

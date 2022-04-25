@@ -16,12 +16,9 @@ const axiosConfig = {
   },
 };
 
-export default function Header() {
-  const [currId, setCurrId] = useState(-1);
+export default function Header(props) {
+  const { currId } = props;
   const navigate = useNavigate();
-  useEffect(async () => {
-    setCurrId((await axios.get(`${API_URL}/user`, axiosConfig)).data.userid);
-  }, []);
 
   const handleLogout = (e) => {
     window.localStorage.removeItem("access_token");
@@ -46,7 +43,7 @@ export default function Header() {
         </div>
 
         <div>
-          <Link to={`/profile/${currId}`}>Profile</Link>
+          <Link to={`/profile/${currId.userid}`}>Profile</Link>
         </div>
 
         <div className={styles.girthyDiv}>

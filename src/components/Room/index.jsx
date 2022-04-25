@@ -44,7 +44,7 @@ export default function Room(props) {
   const [messages, setMessages] = useState([]);
   const [participants, setParticipants] = useState([]);
   const [message, setMessage] = useState("");
-  const [currId, setCurrId] = useState(-1);
+  const { currId } = props;
   const [loading, setLoading] = useState(true);
   const [roomName, setRoomName] = useState("");
   const { roomId } = useParams();
@@ -64,7 +64,6 @@ export default function Room(props) {
         )
       ).data;
       setParticipants(allParticipants.result);
-      setCurrId(allParticipants.userId);
       setMessages(
         (
           await axios.post(
@@ -96,7 +95,7 @@ export default function Room(props) {
           });
       } else {
         const filteredParticipants = participants.filter(
-          (participant) => participant.userid !== currId
+          (participant) => participant.userid !== currId.userid
         );
         setRoomName(
           `${filteredParticipants[0].firstname} ${filteredParticipants[0].lastname}`
@@ -108,7 +107,7 @@ export default function Room(props) {
     const newMessage = {
       message: message,
       roomId: +roomId,
-      userid: currId,
+      userid: currId.userid,
     };
     axios
       .post(`${API_URL}/room/send`, newMessage, axiosConfig)
@@ -132,7 +131,7 @@ export default function Room(props) {
                     <li
                       key={index}
                       className={
-                        message.userid === currId
+                        message.userid === currId.userid
                           ? style.rightText
                           : style.leftText
                       }

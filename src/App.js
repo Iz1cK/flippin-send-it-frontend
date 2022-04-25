@@ -9,6 +9,11 @@ import Profile from "./components/Profile";
 import Room from "./components/Room";
 import Header from "./components/Header";
 
+const API_URL =
+  process.env.REACT_APP_PRODUCTION == "true"
+    ? "http://localhost:4000/api"
+    : process.env.REACT_APP_API_URL;
+
 const checkLogin = () => {
   return !!localStorage.getItem("access_token");
 };
@@ -21,7 +26,18 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [textMessage, setTextMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [currId, setCurrId] = useState(0);
 
+  let axiosConfig = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("access_token"),
+    },
+  };
+
+  useEffect(async () => {
+    setCurrId((await axios.get(`${API_URL}/user`, axiosConfig)).data);
+  }, []);
   // useEffect(() => {
   //   if (socket === null) {
   //     setSocket(io("http://localhost:4000"));
@@ -69,25 +85,25 @@ function App() {
         <button onClick={handleClick}>Send</button>
       <button onClick={verifyUser}>Verify</button>
       </div> */}
-      <Header />
+      <Header currId={currId} />
       <Routes>
         <Route
           exact
           path="/home"
           element={
             <RequireAuth>
-              <Home />
+              <Home currId={currId} />
             </RequireAuth>
           }
         />
-        <Route exact path="/login" element={<LogIn />} />
-        <Route exact path="/room/:roomId" element={<Room />} />
+        <Route exact path="/login" element={<LogIn currId={currId} />} />
+        <Route exact path="/room/:roomId" element={<Room currId={currId} />} />
         <Route
           exact
           path="/profile/:id"
           element={
             <RequireAuth>
-              <Profile />
+              <Profile currId={currId} />
             </RequireAuth>
           }
         />

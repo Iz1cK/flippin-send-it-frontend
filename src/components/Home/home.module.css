@@ -18,3 +18,8 @@
   box-shadow: 2px;
   padding: 1vw;
 }
+
+.center {
+  margin-top: 20px;
+  text-align: center;
+}

@@ -7,6 +7,7 @@ import LogIn from "./components/LogIn";
 import axios from "axios";
 import Profile from "./components/Profile";
 import Room from "./components/Room";
+import Posts from "./components/Posts";
 import Header from "./components/Header";
 
 const API_URL =
@@ -98,6 +99,15 @@ function App() {
         />
         <Route exact path="/login" element={<LogIn currId={currId} />} />
         <Route exact path="/room/:roomId" element={<Room currId={currId} />} />
+        <Route
+          exact
+          path="/posts"
+          element={
+            <RequireAuth>
+              <Posts currId={currId} />
+            </RequireAuth>
+          }
+        />
         <Route
           exact
           path="/profile/:id"

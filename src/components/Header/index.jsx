@@ -31,7 +31,7 @@ export default function Header(props) {
       <div className={styles.leftSide}>
         <img src={logo} className={styles.logoImg} />
         <div>
-          <Link to="/home">Home</Link>
+          <Link to="/posts">Home</Link>
         </div>
 
         <div>

@@ -88,7 +88,6 @@ export default function Authentication() {
     Authenticator.login({ username: username, password: password })
       .then((response) => {
         const data = response.data;
-        console.log(data);
         if (!data.status) {
           window.localStorage.setItem("access_token", data.access_token);
           navigate("/home");
